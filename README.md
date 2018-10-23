@@ -12,7 +12,7 @@ Used as the restful endpoint and socket.io server for 3 Systems:
 
 The System Diagram
 
-![System Diagram](assets/System-Architecture.png)
+![System Diagram](assets/System-architecture.png)
 
 
 # Routes:
