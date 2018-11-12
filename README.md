@@ -20,7 +20,7 @@ The System Diagram
 There are many routes that are created (due to Upfront design) but only the following are really used:
 
 * `GET /parking_lots` returns the list of all parking lots in JSON form
-* `PUT /status` should contain payload { id: <parkingLotId>, status: <0 -> available, 1 -> unavailable> }
+* `PUT /status` should contain payload { id , status } example { id: 1, status: 1 }
 
 # Realtime Updates
 
