@@ -4,9 +4,9 @@ const knex = require('knex')({
   client: 'mysql',
   connection: {
     host: process.env.DB_HOST || 'localhost',
+    password: process.env.DB_PASS || '',
     user: process.env.DB_USER || 'root',
-    name: process.env.DB_NAME || 'citu_parking_app_db',
-    password: process.env.DB_PASS || ''
+    database: process.env.DB_NAME || 'citu_parking_app_db',
   }
 })
 
