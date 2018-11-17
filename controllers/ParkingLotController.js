@@ -131,9 +131,5 @@ module.exports = function(io) {
             console.log('A User has Disconnected')
          })
     })
-
-    
-    
-
     return router
 }
