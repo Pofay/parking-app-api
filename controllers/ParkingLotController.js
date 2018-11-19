@@ -17,6 +17,7 @@ const ParkingLot = require('../models/ParkingLot')
 
 module.exports = function(io) {
 
+  /*
     router.get('/', (req, res) => {
         const getParkingLots = new Promise((resolve, reject) => {
             const names = req.query.names
@@ -48,6 +49,11 @@ module.exports = function(io) {
             res.status(400).json({ code: reject.code, message: reject.sqlMessage })
         })
     })
+    */
+  router.get('/', (req, res) => {
+    res.status(200).json({data: 'Hello World'})
+  })
+
 
     router.get('/id/:id', (req, res) => {    
         new Promise((resolve, reject) => {
