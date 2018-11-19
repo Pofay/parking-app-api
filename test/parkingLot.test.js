@@ -43,7 +43,7 @@ describe('/parking_lot route should', () => {
 
   it('Can update the status of a parkingLot by Name', (done) => {
 
-    const expected = { parkingLot : { id: 5, name: 'B4', status: 1 } }
+    const expected = { parkingLot : { parking_area_id: 1, id: 5, name: 'B4', status: 1 } }
 
     chai.request(app)
       .put('/parking_lots/status')

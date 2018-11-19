@@ -40,7 +40,7 @@ module.exports = function(io) {
       .then(res => res.set('status', req.body.status || 0).save())
       .then(result => {
         const json = result.toJSON()
-        const payload = { parkingLot: { id: json.id, name: json.name, status: json.status } }
+        const payload = { parkingLot: { id: json.id, parking_area_id: json.parking_area_id, name: json.name, status: json.status } }
         io.emit('status-changed', payload)
         res.status(200).json({ data: payload })
       })
@@ -50,12 +50,12 @@ module.exports = function(io) {
     console.log('A User has Connected')
 
     socket.on('status-change', (parkingLot) => {
-      ParkingLot.where('name', parkingLot.name)
+      ParkingLots.where('name', parkingLot.name)
         .fetch()
         .then(res => res.set('status', parkingLot.status).save())
         .then(res => {
           const json = res.toJSON()
-          const payload = { parkingLot: { id: json.id, name: json.name, status: json.status } }
+          const payload = { parkingLot: { id: json.id, parking_area_id: json.parking_area_id, name: json.name, status: json.status } }
           io.emit('status-changed', payload)
         })
     })
