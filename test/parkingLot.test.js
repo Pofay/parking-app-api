@@ -18,12 +18,25 @@ describe('/parking_lot route should', () => {
     ]}
 
     chai.request(app)
-      .get('/parking_lot')
+      .get('/parking_lots')
       .end((err, res) => {
         const actual = res.body.data[0]
         const firstThreeEntries = R.take(3, actual.parkingLots)
         expect(actual.areaName).to.equal(expected.areaName)
         expect(firstThreeEntries).to.deep.equal(expected.parkingLots)
+        done()
+      })
+  })
+
+  it('Can query for for a specific Parking Lot by Id', (done) => {
+
+    const expected = { id: 4, name: 'B3', status: 0 }
+
+    chai.request(app)
+      .get('/parking_lots/4')
+      .end((err, res) => {
+        const actual = R.prop('parkingLot', res.body.data)
+        expect(actual).to.deep.equal(expected)
         done()
       })
   })

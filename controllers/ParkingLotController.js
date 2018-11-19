@@ -1,5 +1,5 @@
 const bodyParser = require('body-parser')
-const { ParkingArea, ParkingLot } = require('../bookshelf/models')
+const { ParkingArea, ParkingLots } = require('../bookshelf/models')
 const express = require('express')
 const Promise = require('bluebird')
 const moment = require('moment')
@@ -8,9 +8,6 @@ const moment = require('moment')
 const winston = require('../base/logger')
 
 const router = express.Router()
-
-// const ParkingArea = require('../models/ParkingArea')
-// const ParkingLot = require('../models/ParkingLot')
 
 module.exports = function(io) {
 
@@ -26,7 +23,19 @@ module.exports = function(io) {
     })
   })
 
+  router.get('/:id', (req, res) => {
+    ParkingLots.where('id',req.params.id).fetch().then(result => {
+      const json = result.toJSON()
+      const payload = { data: { parkingLot: { 
+        id: json.id, name: json.name, status: json.status }
+      }}
+      console.log(payload)
+      res.status(200).json(payload)
+    })
+  })
 
+
+  /*
     router.get('/id/:id', (req, res) => {    
         new Promise((resolve, reject) => {
             db.query(ParkingLot.getParkingLotByID(req.params.id), (err, data, _) => {
@@ -44,6 +53,7 @@ module.exports = function(io) {
         }) 
     })
 
+*/
     router.put('/status', (req, res, next) => {
         const params = req.body
         if (params.id === undefined) {

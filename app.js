@@ -18,6 +18,6 @@ const ParkingLotController = require('./controllers/ParkingLotController')(io)
 console.log(ParkingLotController)
 
 app.use('/user', UserController)
-app.use('/parking_lot', ParkingLotController)
+app.use('/parking_lots', ParkingLotController)
 
 module.exports = { app, io }
