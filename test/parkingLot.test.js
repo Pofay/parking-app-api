@@ -3,6 +3,7 @@ const R = require('ramda')
 const { expect } = chai
 const chaiHttp = require('chai-http')
 const { app } = require('../app')
+const { ParkingLots } = require('../bookshelf/models')
 
 chai.use(chaiHttp)
 
@@ -29,7 +30,6 @@ describe('/parking_lot route should', () => {
   })
 
   it('Can query for for a specific Parking Lot by Id', (done) => {
-
     const expected = { id: 4, name: 'B3', status: 0 }
 
     chai.request(app)
@@ -40,6 +40,21 @@ describe('/parking_lot route should', () => {
         done()
       })
   })
+
+  it('Can update the status of a parkingLot by Name', (done) => {
+
+    const expected = { parkingLot : { id: 5, name: 'B4', status: 1 } }
+
+    chai.request(app)
+      .put('/parking_lots/status')
+      .send({ lotName: 'B4', status: 1 })
+      .end((err, res) => {
+        const actual = res.body.data
+        expect(actual).to.deep.equal(expected)
+        done()
+      })
+  })
+
 })
 
 

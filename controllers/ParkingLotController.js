@@ -29,95 +29,41 @@ module.exports = function(io) {
       const payload = { data: { parkingLot: { 
         id: json.id, name: json.name, status: json.status }
       }}
-      console.log(payload)
       res.status(200).json(payload)
     })
   })
+  
+  router.put('/status', (req, res, next) => {
+    ParkingLots
+      .where('name', req.body.lotName)
+      .fetch()
+      .then(res => res.set('status', req.body.status || 0).save())
+      .then(result => {
+        const json = result.toJSON()
+        const payload = { parkingLot: { id: json.id, name: json.name, status: json.status } }
+        io.emit('status-changed', payload)
+        res.status(200).json({ data: payload })
+      })
+  })
 
+  io.on('connection', (socket) => {
+    console.log('A User has Connected')
 
-  /*
-    router.get('/id/:id', (req, res) => {    
-        new Promise((resolve, reject) => {
-            db.query(ParkingLot.getParkingLotByID(req.params.id), (err, data, _) => {
-                if (err == null)
-                    resolve(data)
-                else 
-                    reject(err)
-            })
-        }).then((resolve) => {
-            winston.log('info', resolve)
-            res.status(200).json({ data: resolve })
-        }).catch((reject) => {
-            winston.error(reject)
-            res.status(400).json({ code: reject.code, message: reject.sqlMessage })
-        }) 
+    socket.on('status-change', (parkingLot) => {
+      ParkingLot.where('name', parkingLot.name)
+        .fetch()
+        .then(res => res.set('status', parkingLot.status).save())
+        .then(res => {
+          const json = res.toJSON()
+          const payload = { id: json.id, name: json.name, status: json.status } 
+          io.emit('status-changed', payload)
+        })
     })
 
-*/
-    router.put('/status', (req, res, next) => {
-        const params = req.body
-        if (params.id === undefined) {
-            res.status(400).json({ code: '', message: 'id is required' })
-        }
-        const status = params.status || 0
-        new Promise((resolve, reject) => {
-            db.query(ParkingLot.updateParkingLotStatus(params.id, status), (err, data, _) => {
-                if (err == null)
-                    resolve(data)
-                else 
-                    reject(err)
-            })
-        }).then((success) => {
-            winston.info(success)
-            return new Promise((resolve, reject) => {
-            db.query(ParkingLot.getParkingLotByID(params.id), (err, data, _) => {
-                if (err == null)
-                    resolve({ data: data, updated: success.affectedRows > 0})
-                else 
-                    reject(err)
-                })
-            })
-        }).then(success => {
-            io.emit('status-changed', success.data[0])
-            res.status(200).json({ updated: success.updated })
-        })
-        .catch((reject) => {
-            winston.error(reject)
-            res.status(400).json({ code: reject.code, message: reject.sqlMessage })
-        }) 
+    socket.on('disconnect', function() {
+      console.log('A User has Disconnected')
     })
+  })
 
-    io.on('connection', function(socket) {
-        console.log('A User has Connected')
-        socket.on('status-change', function(parkingLot) {
-        new Promise((resolve, reject) => {
-            db.query(ParkingLot.updateParkingLotStatus(parseInt(parkingLot.id), parkingLot.status), (err, data, _) => {
-                if (err == null)
-                    resolve(data)
-                else 
-                    reject(err)
-            })
-        }).then(success => {
-            return new Promise((resolve, reject) => {
-            db.query(ParkingLot.getParkingLotByID(parseInt(parkingLot.id)), (err, data, _) => {
-                if (err == null)
-                    resolve(data[0])
-                else 
-                    reject(err)
-                })
-            })
-        }).then(parkingLot => {
-            io.emit('status-changed', parkingLot)
-            console.log(parkingLot)
-        })
-        .catch(err => {
-            winston.error(err)
-            io.emit('status-changed-error', err);
-            })
-        })
-        socket.on('disconnect', function() {
-            console.log('A User has Disconnected')
-         })
-    })
-    return router
+  return router
 }
