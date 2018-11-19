@@ -3,13 +3,11 @@ const express = require('express')
 const Promise = require('bluebird')
 const moment = require('moment')
 
-const db = require('../base/db')
+// const db = require('../base/db')
 const winston = require('../base/logger')
 
 const router = express.Router()
 
-router.use(bodyParser.urlencoded({ extended: true }))
-router.use(bodyParser.json())
 
 const ParkingArea = require('../models/ParkingArea')
 const ParkingLot = require('../models/ParkingLot')
