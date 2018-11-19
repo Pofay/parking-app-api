@@ -8,10 +8,8 @@ const winston = require('../base/logger')
 
 const router = express.Router()
 
-
 const ParkingArea = require('../models/ParkingArea')
 const ParkingLot = require('../models/ParkingLot')
-
 
 module.exports = function(io) {
 

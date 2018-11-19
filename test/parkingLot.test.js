@@ -16,9 +16,9 @@ describe('/parking_lot route should', () => {
     ]}
 
     chai.request(app)
-      .get('/')
-      .end(result => {
-        expect(result.status).to.equal(200)
+      .get('/parking_lot')
+      .end((err, res) => {
+        expect(res.body).to.deep.include(expected)
         done()
       })
   })
