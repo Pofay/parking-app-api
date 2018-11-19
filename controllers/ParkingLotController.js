@@ -1,4 +1,5 @@
 const bodyParser = require('body-parser')
+const { ParkingArea, ParkingLot } = require('../bookshelf/models')
 const express = require('express')
 const Promise = require('bluebird')
 const moment = require('moment')
@@ -8,46 +9,21 @@ const winston = require('../base/logger')
 
 const router = express.Router()
 
-const ParkingArea = require('../models/ParkingArea')
-const ParkingLot = require('../models/ParkingLot')
+// const ParkingArea = require('../models/ParkingArea')
+// const ParkingLot = require('../models/ParkingLot')
 
 module.exports = function(io) {
 
-  /*
-    router.get('/', (req, res) => {
-        const getParkingLots = new Promise((resolve, reject) => {
-            const names = req.query.names
-            db.query(names === undefined ? ParkingLot.getParkingLots() : ParkingLot.getParkingLotsByNames(typeof(names) === 'string' ? names : names[0]), (err, data, _) => {
-                if (err == null)
-                    resolve(data)
-                else 
-                    reject(err)
-            })
-        })
-        const getParkingAreas = new Promise((resolve, reject) => {
-            db.query(ParkingArea.getParkingAreas(), (err, data, _) => {
-                if (err == null)
-                    resolve(data)
-                else 
-                    reject(err)
-            })
-        })
-        Promise.join(getParkingAreas, getParkingLots, (parkingAreas, parkingLots) => {
-            return parkingLots.reduce((accumulator, current) => {
-                const parkingAreaName = parkingAreas.filter ( parkingArea => parkingArea.id === current.parking_area_id )[0].name
-                if (!accumulator[parkingAreaName]) accumulator[parkingAreaName] = []
-                accumulator[parkingAreaName].push(current)
-                return accumulator
-            }, { })
-        }).then((resolve) => {
-            res.status(200).json({ data: resolve })
-        }).catch((reject) => {
-            res.status(400).json({ code: reject.code, message: reject.sqlMessage })
-        })
-    })
-    */
   router.get('/', (req, res) => {
-    res.status(200).json({data: 'Hello World'})
+    ParkingArea.forge().fetchAll({withRelated: ['parking_lots']}).then(result => {
+      const transformed = result.toJSON().map(r =>
+        ({ 
+          areaName: r.name,
+          parkingLots: r.parking_lots.map(l => ({ id: l.id, name: l.name, status: l.status }))
+        })
+      )
+      res.status(200).json({ data: transformed })
+    })
   })
 
 
