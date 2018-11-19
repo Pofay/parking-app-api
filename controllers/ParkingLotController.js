@@ -55,7 +55,7 @@ module.exports = function(io) {
         .then(res => res.set('status', parkingLot.status).save())
         .then(res => {
           const json = res.toJSON()
-          const payload = { id: json.id, name: json.name, status: json.status } 
+          const payload = { parkingLot: { id: json.id, name: json.name, status: json.status } }
           io.emit('status-changed', payload)
         })
     })
