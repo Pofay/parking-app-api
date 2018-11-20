@@ -1,10 +1,6 @@
-const bodyParser = require('body-parser')
 const { ParkingArea, ParkingLots } = require('../bookshelf/models')
 const express = require('express')
-const Promise = require('bluebird')
-const moment = require('moment')
-
-// const db = require('../base/db')
+// const moment = require('moment')
 const winston = require('../base/logger')
 
 const router = express.Router()
