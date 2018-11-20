@@ -2,14 +2,18 @@ const express = require('express')
 const Server = require('socket.io')
 const bodyParser = require('body-parser')
 const mqtt = require('mqtt')
+const ioToMqttHub = require('./io-to-mqtt-hub')
 
-const client = mqtt.connect('mqtt://192.168.0.113:1883')
-client.on('connect', () => {
+const mqttClient = mqtt.connect('mqtt://192.168.0.113:1883')
+
+mqttClient.on('connect', () => {
   console.log('Now connected to Mqtt Broker at 192.168.0.113:1883')
 })
 
-const app = express()
 const io = new Server()
+const app = express()
+
+ioToMqttHub.setup(io, mqttClient)
 
 app.use((req,res, next) => {
 	res.header("Access-Control-Allow-Origin", "*");
