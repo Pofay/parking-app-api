@@ -1,6 +1,5 @@
 const { ParkingArea, ParkingLots } = require('../bookshelf/models')
 const express = require('express')
-// const moment = require('moment')
 const winston = require('../base/logger')
 
 const router = express.Router()
@@ -42,6 +41,9 @@ module.exports = function(io) {
       })
   })
 
+  // Transfer this to another file 
+  // Module Setup and also include an interchange
+  // between Mqtt and Socket.io
   io.on('connection', (socket) => {
     console.log('A User has Connected')
 

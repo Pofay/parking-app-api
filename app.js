@@ -1,6 +1,13 @@
 const express = require('express')
 const Server = require('socket.io')
 const bodyParser = require('body-parser')
+const mqtt = require('mqtt')
+
+const client = mqtt.connect('mqtt://192.168.0.113:1883')
+client.on('connect', () => {
+  console.log('Now connected to Mqtt Broker at 192.168.0.113:1883')
+})
+
 const app = express()
 const io = new Server()
 
@@ -15,7 +22,6 @@ app.use(bodyParser.json())
 
 const UserController = require('./controllers/UserController')
 const ParkingLotController = require('./controllers/ParkingLotController')(io)
-console.log(ParkingLotController)
 
 app.use('/user', UserController)
 app.use('/parking_lots', ParkingLotController)
