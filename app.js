@@ -6,10 +6,6 @@ const ioToMqttHub = require('./io-to-mqtt-hub')
 
 const mqttClient = mqtt.connect('mqtt://192.168.0.113:1883')
 
-mqttClient.on('connect', () => {
-  console.log('Now connected to Mqtt Broker at 192.168.0.113:1883')
-})
-
 const io = new Server()
 const app = express()
 
