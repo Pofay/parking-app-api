@@ -1,4 +1,4 @@
-const { ParkingLots } = require('./bookshelf/models')
+const parkingRepo = require('./parking-repo')
 
 function setup(socketIO, mqttClient) {
 
@@ -13,12 +13,13 @@ function setup(socketIO, mqttClient) {
     const payload = JSON.parse(message)
     switch(topic) {
       case 'parkingLot/status-change':
-        ParkingLots.where('name', payload.lotName)
-          .fetch()
-          .then(res => res.set('status', payload.status).save())
-          .then(res => Promise.resolve(res.toJSON()))
-          .then(res => Promise.resolve(({ parkingLot: { id: res.id, parking_area_id: res.parking_area_id, name: res.name, status: res.status } })))
-          .then(res => socketIO.emit('status-changed', res))
+        parkingRepo
+          .updateStatusByName(payload.status, payload.lotName)
+          .map(res => res.toJSON())
+          .map(res =>  ({ parkingLot: { id: res.id, parking_area_id: res.parking_area_id, name: res.name, status: res.status } }))
+          .fork(
+            (err) => console.err(err),
+            (payload) => socketIO.emit('status-changed', payload))
     }
   })
 }

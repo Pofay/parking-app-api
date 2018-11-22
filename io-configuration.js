@@ -1,18 +1,17 @@
-const { ParkingLots } = require('./bookshelf/models')
+const parkingRepo = require('./parking-repo')
 
 function configure(io) {
   io.on('connection', (socket) => {
     console.log('A User has Connected')
 
     socket.on('status-change', (parkingLot) => {
-      ParkingLots.where('name', parkingLot.name)
-        .fetch()
-        .then(res => res.set('status', parkingLot.status).save())
-        .then(res => {
-          const json = res.toJSON()
-          const payload = { parkingLot: { id: json.id, parking_area_id: json.parking_area_id, name: json.name, status: json.status } }
-          io.emit('status-changed', payload)
-        })
+      parkingRepo
+        .updateStatusByName(parkingLot.status, parkingLot.name)
+        .map(res => res.toJSON())
+        .map(res =>  ({ parkingLot: { id: res.id, parking_area_id: res.parking_area_id, name: res.name, status: res.status } }))
+        .fork(
+          (err) => console.err(err),
+          (payload) => io.emit('status-changed', payload))
     })
 
     socket.on('disconnect', function() {
