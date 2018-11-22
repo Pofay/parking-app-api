@@ -10,7 +10,7 @@ function setup(socketIO, mqttClient) {
 
   mqttClient.on('message', (topic, message) => {
     console.log(`Recevied topic: ${topic} ,message: ${message}`)
-    const payload = JSON.parse(message)
+    const payload = JSON.parse(message) // Catch expected error here
     switch(topic) {
       case 'parkingLot/status-change':
         parkingRepo

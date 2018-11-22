@@ -8,6 +8,7 @@ const router = express.Router()
 
 module.exports = function(io) {
 
+  // Replace Promise Usage with Futures
   router.get('/', (req, res) => {
     ParkingArea.forge().fetchAll({withRelated: ['parking_lots']}).then(result => {
       const transformed = result.toJSON().map(r =>
@@ -20,6 +21,7 @@ module.exports = function(io) {
     })
   })
 
+  // Replace Promise Usage with Futures
   router.get('/:id', (req, res) => {
     ParkingLots.where('id',req.params.id).fetch().then(result => {
       const json = result.toJSON()
