@@ -3,12 +3,14 @@ const Server = require('socket.io')
 const bodyParser = require('body-parser')
 const mqtt = require('mqtt')
 const ioToMqttHub = require('./io-to-mqtt-hub')
+const ioConfiguration = require('./io-configuration')
 
 const mqttClient = mqtt.connect('mqtt://192.168.0.113:1883')
 
 const io = new Server()
 const app = express()
 
+ioConfiguration.configure(io)
 ioToMqttHub.setup(io, mqttClient)
 
 app.use((req,res, next) => {
