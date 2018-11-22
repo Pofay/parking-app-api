@@ -12,7 +12,7 @@ Used as the restful endpoint and socket.io server for 3 Systems:
 
 The System Diagram
 
-![System Diagram](assets/System-architecture.png)
+![System Diagram](assets/System-Architecture.png)
 
 
 # Routes:
@@ -20,7 +20,7 @@ The System Diagram
 There are many routes that are created (due to Upfront design) but only the following are really used:
 
 * `GET /parking_lots` returns the list of all parking lots in JSON form
-* `PUT /parking_lots/:id` updates the status of a specific parking lot whether it is vacant or occupied.
+* `PUT /status` should contain payload `{ id , status }` example: `{ id: 1, status: 1 } where status of 0 is available or green and 1 is unavailable or red`
 
 # Realtime Updates
 
