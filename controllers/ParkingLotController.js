@@ -1,6 +1,8 @@
 const { ParkingArea, ParkingLots } = require('../bookshelf/models')
 const express = require('express')
+const Future = require('fluture')
 const winston = require('../base/logger')
+const parkingRepo = require('../parking-repo')
 
 const router = express.Router()
 
@@ -29,16 +31,18 @@ module.exports = function(io) {
   })
   
   router.put('/status', (req, res, next) => {
-    ParkingLots
-      .where('name', req.body.lotName)
-      .fetch()
-      .then(res => res.set('status', req.body.status || 0).save())
-      .then(result => {
-        const json = result.toJSON()
-        const payload = { parkingLot: { id: json.id, parking_area_id: json.parking_area_id, name: json.name, status: json.status } }
-        io.emit('status-changed', payload)
-        res.status(200).json({ data: payload })
-      })
+    const status = req.body.status || 0
+    const name = req.body.lotName
+    parkingRepo
+      .updateStatusByName(status,name)
+      .map(res => res.toJSON())
+      .map(res => ({ parkingLot: { id: res.id, parking_area_id: res.parking_area_id, name: res.name, status: res.status } }))
+      .fork(
+        (err) => console.log(err),
+        (payload) => {
+          io.emit('status-changed', payload)
+          res.status(200).json({ data: payload })
+        })
   })
 
   return router

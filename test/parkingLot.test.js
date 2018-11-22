@@ -15,7 +15,7 @@ describe('/parking_lot route should', () => {
     parkingLots: [
       { id: 1, name: 'PWD', status: 1 },
       { id: 2, name: 'B1', status: 0 },
-      { id: 3, name: 'B2', status: 0 }
+      { id: 3, name: 'B2', status: 1 }
     ]}
 
     chai.request(app)
