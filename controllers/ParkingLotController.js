@@ -13,6 +13,7 @@ module.exports = function(io) {
     ParkingArea.forge().fetchAll({withRelated: ['parking_lots']}).then(result => {
       const transformed = result.toJSON().map(r =>
         ({ 
+	  id: r.id,
           areaName: r.name,
           parkingLots: r.parking_lots.map(l => ({ id: l.id, name: l.name, status: l.status }))
         })

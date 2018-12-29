@@ -11,11 +11,11 @@ describe('/parking_lot route should', () => {
 
   it('return a Json of Format { data:  { parkingAreas: [ { areaName: <name>, parkingLots: [{parkingLots}]  ] } }', (done) => {
 
-    const expected = { areaName: 'New Academic Building', 
+    const expected = { id: 1, areaName: 'New Academic Building', 
     parkingLots: [
       { id: 1, name: 'PWD', status: 1 },
       { id: 2, name: 'B1', status: 0 },
-      { id: 3, name: 'B2', status: 1 }
+      { id: 3, name: 'B2', status: 0 }
     ]}
 
     chai.request(app)
