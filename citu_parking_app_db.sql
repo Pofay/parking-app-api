@@ -417,3 +417,20 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+CREATE TABLE `tbl_occupant` (
+  `school_id_number` VARCHAR(30) PRIMARY KEY,
+  `name` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+INSERT INTO `tbl_occupant` (`school_id_number`,`name`) VALUES 
+('16-1799-579', 'Gian Carlo Gilos'),
+('16-5799-879', 'Percy Joseph Fernandez');
+
+CREATE TABLE `tbl_occupation` (
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,
+  `occupant_id_number` VARCHAR(30) NOT NULL,
+  `lotName`  VARCHAR(5) NOT NULL,
+  `status` VARCHAR(10) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
