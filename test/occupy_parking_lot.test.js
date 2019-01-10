@@ -1,6 +1,7 @@
 const { expect } = require('chai')
-const { Occupant, Occupation } = require('../bookshelf/models')
+const { Occupation } = require('../bookshelf/models')
 const { Future } = require('fluture')
+const { occupyParkingLot, getActiveOccupationForLot } = require('../domain/parking')
 
 describe('Learning Tests', () => {
   it('Query on empty', done => {
@@ -40,6 +41,7 @@ describe('Query Parking Lot Occupant', () => {
       },
       success => {
         expect.fail('Should return an error message')
+        done()
       }
     )
   })
@@ -54,9 +56,8 @@ describe('Query Parking Lot Occupant', () => {
     const compoundQuery = Future.do(function * () {
       yield occupyParkingLot('D1', '16-1799-579')
       const occupation = yield getActiveOccupationForLot('D1')
-      const occupant = yield getOccupant(occupation.occupant_id_number)
       yield Future.tryP(() => Occupation.where({ lotName: 'D1' }).destroy())
-      return attachOccupantToOccupation(occupant, occupation)
+      return occupation
     })
 
     compoundQuery.fork(
@@ -73,35 +74,50 @@ describe('Query Parking Lot Occupant', () => {
   })
 })
 
-const attachOccupantToOccupation = (occupant, occupation) => ({
-  lotName: occupation.lotName,
-  status: occupation.status,
-  occupant
-})
-
-const getActiveOccupationForLot = parkingLotName =>
-  Future.tryP(() =>
-    Occupation.where({ lotName: parkingLotName, status: 'OCCUPIED' }).fetch()
-  ).chain(data =>
-    data === null
-      ? Future.reject(`No Current Occupation for ${parkingLotName}`)
-      : Future.of(data.toJSON())
-  )
-
-const getOccupant = idNumber =>
-  Future.tryP(() =>
-    Occupant.where({ school_id_number: idNumber }).fetch()
-  ).chain(data =>
-    data === null
-      ? Future.reject(`No Occupant with ${idNumber}`)
-      : Future.of(data.toJSON())
-  )
-
-const occupyParkingLot = (lotName, idNumber) =>
-  Future.tryP(() =>
+describe('Occupying a Parking Lot', () => {
+  beforeEach(done => {
     Occupation.forge({
       lotName: 'D1',
       status: 'OCCUPIED',
       occupant_id_number: '16-1799-579'
-    }).save()
-  )
+    })
+      .save()
+      .then(() => done())
+  })
+
+  afterEach(done => {
+    Occupation.where({ lotName: 'D1' })
+      .destroy()
+      .then(() => done())
+  })
+
+  it('should not be able to occupy when parkingLot is currently occupied', done => {
+    const expectedMessage = 'D1 is already occupied.'
+
+    occupyParkingLot('D1', '16-5799-879').fork(
+      err => {
+        expect(err).to.equal(expectedMessage)
+        done()
+      },
+      success => {
+        expect.fail('Should return an error message')
+        done()
+      }
+    )
+  })
+
+  it('should not be able to occupy when idNumber has a active occupation', done => {
+    const expectedMessage = '16-1799-579 has an active occupation.'
+
+    occupyParkingLot('D2', '16-1799-579').fork(
+      err => {
+        expect(err).to.equal(expectedMessage)
+        done()
+      },
+      success => {
+        expect.fail('Should return an error message')
+        done()
+      }
+    )
+  })
+})
