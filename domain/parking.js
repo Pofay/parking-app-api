@@ -68,4 +68,4 @@ const hasNoActiveOccupation = idNumber =>
     }).fetch()
   ).chain(data => (data === null ? Future.of(true) : Future.of(false)))
 
-module.exports = { occupyParkingLot, getActiveOccupationForLot }
+module.exports = { occupyParkingLot, getActiveOccupationForLot, isNotCurrentlyOccupied }
