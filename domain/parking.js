@@ -1,35 +1,30 @@
-const { Occupant, Occupation } = require('../bookshelf/models')
+const { Occupation } = require('../bookshelf/models')
 const Future = require('fluture')
 
 const getActiveOccupationForLot = parkingLotName =>
-  Future.do(function * () {
+  Future.do(function* () {
     const occupation = yield queryActiveOccupationFor(parkingLotName)
-    const occupant = yield getOccupant(occupation.occupant_id_number)
-    return attachOccupantToOccupation(occupant, occupation)
+    return formatOccupationData(occupation)
   })
 
-const queryActiveOccupationFor = parkingLotName =>
+const queryActiveOccupation = parkingLotName =>
   Future.tryP(() =>
-    Occupation.where({ lotName: parkingLotName, status: 'OCCUPIED' }).fetch()
-  ).chain(data =>
+    Occupation.where({ lotName: parkingLotName, status: 'OCCUPIED' }).fetch({
+      withRelated: 'occupant'
+    })
+  )
+
+const queryActiveOccupationFor = parkingLotName =>
+  queryActiveOccupation(parkingLotName).chain(data =>
     data === null
       ? Future.reject(`No Current Occupation for ${parkingLotName}`)
       : Future.of(data.toJSON())
   )
 
-const getOccupant = idNumber =>
-  Future.tryP(() =>
-    Occupant.where({ school_id_number: idNumber }).fetch()
-  ).chain(data =>
-    data === null
-      ? Future.reject(`No Occupant with ${idNumber}`)
-      : Future.of(data.toJSON())
-  )
-
-const attachOccupantToOccupation = (occupant, occupation) => ({
+const formatOccupationData = occupation => ({
   lotName: occupation.lotName,
   status: occupation.status,
-  occupant
+  occupant: occupation.occupant
 })
 
 const occupyParkingLot = (lotName, idNumber) =>
@@ -56,9 +51,9 @@ const occupyParkingLot = (lotName, idNumber) =>
     )
 
 const isNotCurrentlyOccupied = lotName =>
-  Future.tryP(() =>
-    Occupation.where({ lotName: lotName, status: 'OCCUPIED' }).fetch()
-  ).chain(data => (data === null ? Future.of(true) : Future.of(false)))
+  queryActiveOccupation(lotName).chain(data =>
+    data === null ? Future.of(true) : Future.of(false)
+  )
 
 const hasNoActiveOccupation = idNumber =>
   Future.tryP(() =>
@@ -68,4 +63,8 @@ const hasNoActiveOccupation = idNumber =>
     }).fetch()
   ).chain(data => (data === null ? Future.of(true) : Future.of(false)))
 
-module.exports = { occupyParkingLot, getActiveOccupationForLot, isNotCurrentlyOccupied }
+module.exports = {
+  occupyParkingLot,
+  getActiveOccupationForLot,
+  isNotCurrentlyOccupied
+}
