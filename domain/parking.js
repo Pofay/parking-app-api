@@ -2,10 +2,19 @@ const { Occupation } = require('../bookshelf/models')
 const Future = require('fluture')
 
 const getActiveOccupationForLot = parkingLotName =>
-  Future.do(function* () {
+  Future.do(function * () {
     const occupation = yield queryActiveOccupationFor(parkingLotName)
     return formatOccupationData(occupation)
   })
+
+const getAllActiveOccupations = () =>
+  Future.tryP(() =>
+    Occupation.where({ status: 'OCCUPIED' }).fetchAll({
+      withRelated: 'occupant'
+    })
+  )
+    .map(result => result.toJSON())
+    .map(result => result.map(r => formatOccupationData(r)))
 
 const queryActiveOccupation = parkingLotName =>
   Future.tryP(() =>
@@ -66,5 +75,6 @@ const hasNoActiveOccupation = idNumber =>
 module.exports = {
   occupyParkingLot,
   getActiveOccupationForLot,
-  isNotCurrentlyOccupied
+  isNotCurrentlyOccupied,
+  getAllActiveOccupations
 }
