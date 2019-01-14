@@ -26,9 +26,9 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 const ParkingLotController = require('./controllers/ParkingLotController')(io)
-const OccupationController = require('./controllers/OccupationController')
+const OccupationController = require('./controllers/OccupationController')()
 
 app.use('/parking_lots', ParkingLotController)
-app.use('/occupations', OccupationController)
+app.use('/lot_occupations', OccupationController)
 
 module.exports = { app, io }

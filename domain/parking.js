@@ -10,11 +10,11 @@ const getActiveOccupationForLot = parkingLotName =>
 const getAllActiveOccupations = () =>
   Future.tryP(() =>
     Occupation.where({ status: 'OCCUPIED' }).fetchAll({
-      withRelated: 'occupant'
+      withRelated: ['occupant']
     })
   )
-    .map(result => result.toJSON())
-    .map(result => result.map(r => formatOccupationData(r)))
+    .map(result => (result.toJSON()))
+    .map(result => (result.map(formatOccupationData)))
 
 const queryActiveOccupation = parkingLotName =>
   Future.tryP(() =>
