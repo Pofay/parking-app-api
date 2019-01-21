@@ -1,6 +1,7 @@
 const parkingRepo = require('./parking-repo')
 const {
   occupyParkingLot,
+  unoccupyParkingLot,
   getActiveOccupationForLot
 } = require('./domain/parking')
 
@@ -10,6 +11,7 @@ function setup (socketIO, mqttClient) {
     mqttClient.subscribe('parkingLot/status-change')
     mqttClient.subscribe('parkingLot/getInitialState')
     mqttClient.subscribe('parkingLot/occupy')
+    mqttClient.subscribe('parkingLot/unoccupy')
     console.log('Subscribing to topic: parkingLot/status-change')
   })
 
@@ -70,6 +72,19 @@ function setup (socketIO, mqttClient) {
             success =>
               mqttClient.publish('parkingLot/occupied', JSON.stringify(success))
           )
+        break
+      case 'parkingLot/unoccupy':
+        unoccupyParkingLot(payload.lotName, payload.idNumber).fork(
+          err => {
+            console.error(err)
+            mqttClient.publish(
+              'parkingLot/unoccupyError',
+              JSON.stringify({ lotName: payload.lotName, reason: err })
+            )
+          },
+          success =>
+            mqttClient.publish('parkingLot/unoccupied', JSON.stringify(success))
+        )
         break
     }
   })
