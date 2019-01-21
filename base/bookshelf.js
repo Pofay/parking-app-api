@@ -6,7 +6,7 @@ const knex = require('knex')({
     host: process.env.DB_HOST || 'localhost',
     password: process.env.DB_PASS || '',
     user: process.env.DB_USER || 'root',
-    database: process.env.DB_NAME || 'citu_parking_app_db',
+    database: process.env.DB_NAME || 'citu_parking_app_db'
   }
 })
 

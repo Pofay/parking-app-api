@@ -425,7 +425,9 @@ CREATE TABLE `tbl_occupant` (
 
 INSERT INTO `tbl_occupant` (`school_id_number`,`name`) VALUES 
 ('16-1799-579', 'Gian Carlo Gilos'),
-('16-5799-879', 'Percy Joseph Fernandez');
+('16-5799-879', 'Percy Joseph Fernandez'),
+('95-30-f2-29', 'Cardo Magtanggol'),
+('1b-2b-a1-79', 'Jon Fritz Quilo');
 
 CREATE TABLE `tbl_occupation` (
   `id` int(11) PRIMARY KEY AUTO_INCREMENT,
@@ -434,3 +436,5 @@ CREATE TABLE `tbl_occupation` (
   `status` VARCHAR(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+INSERT INTO `tbl_occupation` (`occupant_id_number`, `lotName`, `status`) VALUES
+(`16-1794-578`, `D6`, `OCCUPIED`);

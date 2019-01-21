@@ -1,9 +1,9 @@
 const { expect } = require('chai')
-const Future = require('fluture')
 const { Occupation } = require('../bookshelf/models')
 const {
   occupyParkingLot,
-  isNotCurrentlyOccupied
+  isNotCurrentlyOccupied,
+  unoccupyParkingLot
 } = require('../domain/parking')
 
 describe('Unoccupy Parking Lot', () => {
@@ -48,16 +48,3 @@ describe('Unoccupy Parking Lot', () => {
     )
   })
 })
-
-const unoccupyParkingLot = (lotName, idNumber) =>
-  Future.tryP(() =>
-    Occupation.where({
-      lotName: lotName,
-      occupant_id_number: idNumber,
-      status: 'OCCUPIED'
-    }).fetch()
-  ).chain(data =>
-    data === null
-      ? Future.reject(`No Active Occupation for ${idNumber} at ${lotName}`)
-      : Future.tryP(() => data.set({ status: 'UNOCCUPIED' }).save())
-  )

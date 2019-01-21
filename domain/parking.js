@@ -7,6 +7,19 @@ const getActiveOccupationForLot = parkingLotName =>
     return formatOccupationData(occupation)
   })
 
+const unoccupyParkingLot = (lotName, idNumber) =>
+  Future.tryP(() =>
+    Occupation.where({
+      lotName: lotName,
+      occupant_id_number: idNumber,
+      status: 'OCCUPIED'
+    }).fetch()
+  ).chain(data =>
+    data === null
+      ? Future.reject(`No Active Occupation for ${idNumber} at ${lotName}`)
+      : Future.tryP(() => data.set({ status: 'UNOCCUPIED' }).save())
+  )
+
 const getAllActiveOccupations = () =>
   Future.tryP(() =>
     Occupation.where({ status: 'OCCUPIED' }).fetchAll({
@@ -76,5 +89,6 @@ module.exports = {
   occupyParkingLot,
   getActiveOccupationForLot,
   isNotCurrentlyOccupied,
-  getAllActiveOccupations
+  getAllActiveOccupations,
+  unoccupyParkingLot
 }
