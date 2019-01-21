@@ -69,8 +69,10 @@ function setup (socketIO, mqttClient) {
                 JSON.stringify({ lotName: payload.lotName, reason: err })
               )
             },
-            success =>
+            success => {
               mqttClient.publish('parkingLot/occupied', JSON.stringify(success))
+              socketIO.emit('parkingLot/occupied', success)
+            }
           )
         break
       case 'parkingLot/unoccupy':
@@ -82,8 +84,10 @@ function setup (socketIO, mqttClient) {
               JSON.stringify({ lotName: payload.lotName, reason: err })
             )
           },
-          success =>
+          success => {
             mqttClient.publish('parkingLot/unoccupied', JSON.stringify(success))
+            socketIO.emit('parkingLot/unoccupied', success)
+          }
         )
         break
     }
