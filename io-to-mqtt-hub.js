@@ -1,3 +1,4 @@
+require('dotenv').config()
 const parkingRepo = require('./parking-repo')
 const {
   occupyParkingLot,
@@ -5,9 +6,12 @@ const {
   getActiveOccupationForLot
 } = require('./domain/parking')
 
+const host = 'localhost'
+const mqttPort = '1883'
+
 function setup (socketIO, mqttClient) {
   mqttClient.on('connect', () => {
-    console.log('Now connected to Mqtt Broker at 192.168.0.113:1883')
+    console.log(`Now connected to ${host}:${mqttPort}`)
     mqttClient.subscribe('parkingLot/status-change')
     mqttClient.subscribe('parkingLot/getInitialState')
     mqttClient.subscribe('parkingLot/occupy')

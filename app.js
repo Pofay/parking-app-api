@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express')
 const Server = require('socket.io')
 const bodyParser = require('body-parser')
@@ -5,7 +6,10 @@ const mqtt = require('mqtt')
 const ioToMqttHub = require('./io-to-mqtt-hub')
 const ioConfiguration = require('./io-configuration')
 
-const mqttClient = mqtt.connect('mqtt://192.168.0.110:1883')
+const host = process.env.HOST
+const mqttPort = process.env.MQTT_PORT
+
+const mqttClient = mqtt.connect(`mqtt://${host}:${mqttPort}`)
 
 const io = new Server()
 const app = express()
