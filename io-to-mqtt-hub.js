@@ -6,8 +6,8 @@ const {
   getActiveOccupationForLot
 } = require('./domain/parking')
 
-const host = 'localhost'
-const mqttPort = '1883'
+const host = process.env.MQTT_HOST || 'localhost'
+const mqttPort = process.env.MQTT_PORT || '1883'
 
 function setup (socketIO, mqttClient) {
   mqttClient.on('connect', () => {

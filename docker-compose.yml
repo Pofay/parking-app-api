@@ -1,0 +1,42 @@
+version: '3.1'
+
+services:
+
+  parking-app-db:
+    image: parking-app/db:latest
+    build:
+      context: ./database
+      dockerfile: Dockerfile
+
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_DATABASE: citu_parking_app_db 
+
+  mqtt-broker:
+    image: eclipse-mosquitto:latest
+  
+  parking-app-api:
+    image: parking-app/api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DB_HOST=parking-app-db
+      - DB_PORT=${DB_PORT}
+      - DB_PASS=${DB_PASS}
+      - DB_USER=${DB_USER}
+      - DB_NAME=${DB_NAME}
+      - MQTT_HOST=mqtt-broker
+      - MQTT_PORT=1883
+      - PORT=${PORT}
+    volumes:
+      - "./src:/usr/src/app/src"
+    ports:
+      - 2000:4000
+    depends_on:
+      - parking-app-db
+      - mqtt-broker
+
+
+  

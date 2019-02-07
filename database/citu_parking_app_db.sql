@@ -28,6 +28,8 @@ SET time_zone = "+00:00";
 -- Table structure for table `tbl_parking`
 --
 
+CREATE DATABASE IF NOT EXISTS citu_parking_app_db;
+
 CREATE TABLE `tbl_parking` (
   `id` int(1) NOT NULL,
   `guard_id` int(11) NOT NULL,

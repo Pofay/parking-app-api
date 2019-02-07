@@ -6,10 +6,10 @@ const mqtt = require('mqtt')
 const ioToMqttHub = require('./io-to-mqtt-hub')
 const ioConfiguration = require('./io-configuration')
 
-const host = process.env.HOST
+const mqttHost = process.env.MQTT_HOST
 const mqttPort = process.env.MQTT_PORT
 
-const mqttClient = mqtt.connect(`mqtt://${host}:${mqttPort}`)
+const mqttClient = mqtt.connect(`mqtt://${mqttHost}:${mqttPort}`)
 
 const io = new Server()
 const app = express()
