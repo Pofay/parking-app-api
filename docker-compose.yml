@@ -15,12 +15,15 @@ services:
 
   mqtt-broker:
     image: eclipse-mosquitto:latest
+    ports:
+      - 1883:1883
   
   parking-app-api:
     image: parking-app/api
     build:
       context: .
       dockerfile: Dockerfile
+    env_file: .env
     environment:
       - DB_HOST=parking-app-db
       - DB_PORT=${DB_PORT}
