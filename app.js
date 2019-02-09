@@ -14,7 +14,7 @@ const mqttClient = mqtt.connect(`mqtt://${mqttHost}:${mqttPort}`)
 const io = new Server()
 const app = express()
 
-ioConfiguration.configure(io)
+ioConfiguration.configure(io, mqttClient)
 ioToMqttHub.setup(io, mqttClient)
 
 app.use((req, res, next) => {

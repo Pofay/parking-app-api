@@ -1,6 +1,6 @@
 const parkingRepo = require('./parking-repo')
 
-function configure (io) {
+function configure (io, mqttClient) {
   io.on('connection', socket => {
     console.log('A User has Connected')
 
@@ -20,6 +20,16 @@ function configure (io) {
           err => console.err(err),
           payload => io.emit('status-changed', payload)
         )
+    })
+
+    socket.on('parkingLot/occupy', payload => {
+      console.log(payload)
+      mqttClient.publish('parkingLot/occupy', JSON.stringify(payload))
+    })
+
+    socket.on('parkingLot/unoccupy', payload => {
+      console.log(payload)
+      mqttClient.publish('parkingLot/unoccupy', JSON.stringify(payload))
     })
 
     socket.on('disconnect', () => {
