@@ -437,6 +437,3 @@ CREATE TABLE `tbl_occupation` (
   `lotName`  VARCHAR(5) NOT NULL,
   `status` VARCHAR(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
-INSERT INTO `tbl_occupation` (`occupant_id_number`, `lotName`, `status`) VALUES
-(`16-1794-578`, `D6`, `OCCUPIED`);
