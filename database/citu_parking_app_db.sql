@@ -30,6 +30,14 @@ SET time_zone = "+00:00";
 
 CREATE DATABASE IF NOT EXISTS citu_parking_app_db;
 
+CREATE TABLE `tbl_violation`(
+  `id` int NOT NULL,
+  `occupant_id` VARCHAR(30) NOT NULL,
+  `rule_violated` VARCHAR(255) NOT NULL,
+  `additional_notes` TEXT,
+  `STATUS` VARCHAR(255) NOT NULL
+);
+
 CREATE TABLE `tbl_parking` (
   `id` int(1) NOT NULL,
   `guard_id` int(11) NOT NULL,

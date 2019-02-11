@@ -28,4 +28,11 @@ const Occupation = bookshelf.Model.extend({
   }
 })
 
-module.exports = { ParkingArea, ParkingLots, Occupant, Occupation }
+const Violation = bookshelf.Model.extend({
+  tableName: 'tbl_violation',
+  occupant: function () {
+    return this.belongsTo(Occupant, `occupant_id`, `school_id_number`)
+  }
+})
+
+module.exports = { ParkingArea, ParkingLots, Occupant, Occupation, Violation }
