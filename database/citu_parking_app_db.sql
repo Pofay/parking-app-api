@@ -31,7 +31,7 @@ SET time_zone = "+00:00";
 CREATE DATABASE IF NOT EXISTS citu_parking_app_db;
 
 CREATE TABLE `tbl_violation`(
-  `id` int NOT NULL,
+  `id` int AUTO_INCREMENT NOT NULL,
   `occupant_id` VARCHAR(30) NOT NULL,
   `rule_violated` VARCHAR(255) NOT NULL,
   `additional_notes` TEXT,
@@ -416,6 +416,9 @@ ALTER TABLE `tbl_parking_lot`
 --
 ALTER TABLE `tbl_person_type`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+ALTER TABLE `tbl_violation`
+  ADD PRIMARY KEY (`id`)
 
 --
 -- AUTO_INCREMENT for table `tbl_user`
