@@ -31,8 +31,10 @@ app.use(bodyParser.json())
 
 const ParkingLotController = require('./controllers/ParkingLotController')(io)
 const OccupationController = require('./controllers/OccupationController')()
+const ViolationsController = require('./controllers/ViolationsController')()
 
 app.use('/parking_lots', ParkingLotController)
 app.use('/lot_occupations', OccupationController)
+app.use('/violations', ViolationsController)
 
 module.exports = { app, io }

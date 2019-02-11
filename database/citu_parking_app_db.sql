@@ -28,15 +28,11 @@ SET time_zone = "+00:00";
 -- Table structure for table `tbl_parking`
 --
 
+DROP DATABASE citu_parking_app_db;
 CREATE DATABASE IF NOT EXISTS citu_parking_app_db;
 
-CREATE TABLE `tbl_violation`(
-  `id` int AUTO_INCREMENT NOT NULL,
-  `occupant_id` VARCHAR(30) NOT NULL,
-  `rule_violated` VARCHAR(255) NOT NULL,
-  `additional_notes` TEXT,
-  `STATUS` VARCHAR(255) NOT NULL
-);
+USE citu_parking_app_db;
+
 
 CREATE TABLE `tbl_parking` (
   `id` int(1) NOT NULL,
@@ -48,6 +44,14 @@ CREATE TABLE `tbl_parking` (
   `last_name` varchar(50) NOT NULL,
   `created_date` varchar(50) NOT NULL,
   `updated_date` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `tbl_violation`(
+  `id` int PRIMARY KEY AUTO_INCREMENT,
+  `occupant_id` VARCHAR(30) NOT NULL,
+  `rule_violated` VARCHAR(255) NOT NULL,
+  `additional_notes` TEXT,
+  `status` VARCHAR(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -416,10 +420,6 @@ ALTER TABLE `tbl_parking_lot`
 --
 ALTER TABLE `tbl_person_type`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
-
-ALTER TABLE `tbl_violation`
-  ADD PRIMARY KEY (`id`)
-
 --
 -- AUTO_INCREMENT for table `tbl_user`
 --
