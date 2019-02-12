@@ -1,4 +1,4 @@
-const { Occupation } = require('../bookshelf/models')
+const { Occupant, Occupation } = require('../bookshelf/models')
 const Future = require('fluture')
 
 const getActiveOccupationForLot = parkingLotName =>
@@ -50,7 +50,9 @@ const formatOccupationData = occupation => ({
 })
 
 const occupyParkingLot = (lotName, idNumber) =>
-  hasNoActiveOccupation(idNumber)
+  exists(idNumber)
+    .map(d => d.school_id_number)
+    .chain(hasNoActiveOccupation)
     .chain(val =>
       val === true
         ? Future.of()
@@ -84,6 +86,13 @@ const hasNoActiveOccupation = idNumber =>
       status: 'OCCUPIED'
     }).fetch()
   ).chain(data => (data === null ? Future.of(true) : Future.of(false)))
+
+const exists = idNumber =>
+  Future.tryP(() =>
+    Occupant.where({
+      school_id_number: idNumber
+    }).fetch()
+  ).chain(data => (data === null ? Future.reject(`No Registered Occupant with that ${data}`) : Future.of(data.toJSON())))
 
 module.exports = {
   occupyParkingLot,
