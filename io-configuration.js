@@ -52,6 +52,23 @@ function configure (io, mqttClient) {
         .catch(err => io.emit('violations/deleteError', err))
     })
 
+    socket.on('violations/update', payload => {
+      Violation.where('id', payload.violationId)
+        .fetch()
+        .then(model =>
+          model
+            .set({
+              occupant_id: payload.occupantId,
+              rule_violated: payload.violatedRule,
+              additional_notes: payload.additionalNotes,
+              status: payload.violationStatus
+            })
+            .save()
+        )
+        .then(model => io.emit('violations/updated', model))
+        .catch(err => io.emit('violations/updateError', err))
+    })
+
     socket.on('disconnect', () => {
       console.log('A User has Disconnected')
     })
