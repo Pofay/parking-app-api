@@ -448,3 +448,9 @@ CREATE TABLE `tbl_occupation` (
   `lotName`  VARCHAR(5) NOT NULL,
   `status` VARCHAR(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `tbl_comment` (
+  `id` int(11) PRIMARY KEY AUTO_INCREMENT,
+  `name` VARCHAR(255) NOT NULL,
+  `comment` VARCHAR(255) NOT NULL
+)

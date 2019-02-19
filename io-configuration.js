@@ -1,5 +1,5 @@
 const parkingRepo = require('./parking-repo')
-const { Violation } = require('./bookshelf/models')
+const { Comments, Violation } = require('./bookshelf/models')
 
 function configure (io, mqttClient) {
   io.on('connection', socket => {
@@ -43,6 +43,23 @@ function configure (io, mqttClient) {
         .save()
         .then(model => io.emit('violations/added', model))
         .catch(err => io.emit('violations/addError', err))
+    })
+
+    socket.on('add-comment', payload => {
+      console.log(payload)
+      Comments.forge({
+        name: payload.name,
+        comment: payload.comment
+      }).save()
+        .then(model => io.emit('added-comment', model))
+    })
+
+    socket.on('get-comments', payload => {
+      Comments.forge()
+        .fetchAll()
+        .then(result => result.toJSON())
+        .then(result => ({ data: result }))
+        .then(data => io.emit('got-comments', data))
     })
 
     socket.on('violations/delete', payload => {

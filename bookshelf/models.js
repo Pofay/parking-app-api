@@ -35,4 +35,8 @@ const Violation = bookshelf.Model.extend({
   }
 })
 
-module.exports = { ParkingArea, ParkingLots, Occupant, Occupation, Violation }
+const Comments = bookshelf.Model.extend({
+  tableName: 'tbl_comment'
+})
+
+module.exports = { Comments, ParkingArea, ParkingLots, Occupant, Occupation, Violation }
