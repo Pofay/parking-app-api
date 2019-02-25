@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `tbl_parking`
 --
 
-DROP DATABASE citu_parking_app_db;
+DROP DATABASE IF EXISTS citu_parking_app_db;
 CREATE DATABASE IF NOT EXISTS citu_parking_app_db;
 
 USE citu_parking_app_db;
